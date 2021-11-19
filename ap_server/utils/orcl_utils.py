@@ -3,7 +3,7 @@ import os
 import logging
 import cx_Oracle
 from configs import (ORCL_HOST, ORCL_PASSWD, ORCL_PORT, ORCL_SERVICE_NAME,
-                    ORCL_USER)
+                     ORCL_USER)
 
 logger = logging.getLogger(__name__)
 
@@ -29,17 +29,17 @@ class OracleAccess(object):
         except cx_Oracle.DatabaseError as e:
             error_obj, = e.args
             logger.error("%s: %s" % (error_obj.code, error_obj.message))
-    
+
     @staticmethod
     def _get_conn():
         return OracleAccess.pool.acquire()
-    
+
     @staticmethod
     def _get_cursor(conn, arraysize=None):
         cursor = conn.cursor()
         cursor.arraysize = arraysize if arraysize else OracleAccess.arraysize
         return cursor
-    
+
     @staticmethod
     def query(sql, args=[], arraysize=None):
         """
@@ -70,7 +70,7 @@ class OracleAccess(object):
             if conn:
                 OracleAccess.pool.release(conn)
 
-    @staticmethod      
+    @staticmethod
     def insert(sql, rows, arraysize=None):
         """
         Args:

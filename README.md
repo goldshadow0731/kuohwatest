@@ -1,29 +1,22 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+## System Requirements
+- CentOS 7
+- Enable ISCSI
+```shell=
+yum install iscsi-initiator-utils
+systemctl enable --now iscsid
+```
+- Install NFS utils
+```shell=
+yum install nfs-utils
+```
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## Use Persistent Volume
+- Due to RWO, strategy of deployment must be Recreate
+```yaml
+strategy:
+  type: Recreate
+```
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact

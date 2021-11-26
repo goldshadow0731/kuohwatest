@@ -8,6 +8,7 @@ base_input_payload = api.model(u'基礎輸入參數定義', {
     'message': fields.String(required=True, default=""),
 })
 
+
 # 登入 API
 account_input_payload = api.model(u'帳號input', {
     'username': fields.String(required=True, example="tami"),
@@ -51,6 +52,7 @@ account_addAccountList_input_payload = api.model(u'新增帳號清單input',  {
 account_addAccountList_output_payload = api.clone(
     u'新增帳號清單output', base_input_payload)
 
+
 # 刪除帳號清單 API
 account_deleteAccountList_input_payload = api.model(u'刪除帳號清單input',  {
     "user_id": fields.String(required=True, example="1")
@@ -58,6 +60,7 @@ account_deleteAccountList_input_payload = api.model(u'刪除帳號清單input', 
 
 account_deleteAccountList_output_payload = api.clone(
     u'刪除帳號清單output', base_input_payload)
+
 
 # 更新帳號清單 API
 account_updateAccountList_input_data_payload = api.model(u'更新帳號清單input_data',  {

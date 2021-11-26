@@ -7,6 +7,7 @@ from utils.orcl_utils import OracleAccess
 
 from .custom_cls import Api
 from apis.account.api import api as account_ns
+from apis.table.api import api as table_ns
 
 api_blueprint = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_blueprint, version="0.0.1", description='',
@@ -38,6 +39,7 @@ app.register_blueprint(api_blueprint)
 
 # register swagger api
 api.add_namespace(account_ns)
+api.add_namespace(table_ns)
 
 # mail
 mail = Mail(app)

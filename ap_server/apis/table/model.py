@@ -1,4 +1,5 @@
 from flask_restplus import Namespace, Resource, fields, model
+from werkzeug.datastructures import FileStorage
 
 api = Namespace("table", description=u"表格偵測結構")
 
@@ -133,3 +134,14 @@ table_getImagePath_output_data_payload = api.model(u'圖片路徑output_data',  
 table_getImagePath_output_payload = api.clone(u'圖片路徑output', base_input_payload, {
     'data': fields.Nested(table_getImagePath_output_data_payload)
 })
+
+
+# 自動儲存圖片路徑 API
+table_autosavImagePath_input_payload = api.parser()
+table_autosavImagePath_input_payload.add_argument(
+    'front_path', type=FileStorage, location='files')
+table_autosavImagePath_input_payload.add_argument(
+    'back_path', type=FileStorage, location='files')
+
+table_autosavImagePath_output_payload = api.clone(
+    u'自動儲存圖片路徑output', base_input_payload)

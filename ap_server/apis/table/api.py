@@ -49,3 +49,11 @@ class getImagePath(CustomResource):
     def post(self):
         data = api.payload
         return Table.get_image_path(uuid=data['uuid'])
+
+
+@api.route("/autosave_image_path")  # 自動儲存圖片路徑 API
+class autosavImagePath(CustomResource):
+    @api.expect(table_autosavImagePath_input_payload)
+    @api.marshal_with(table_autosavImagePath_output_payload)
+    def post(self):
+        return Table.autosave_image_path(uuid="string")

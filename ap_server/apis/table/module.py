@@ -1,4 +1,7 @@
+from flask import request
 from flask_mail import Message
+from werkzeug.utils import secure_filename
+import os
 
 import base_api
 from configs.tbl_consts import TBL_USER_DETECT_TABLE, TBL_USER_IMAGE_PATH_TABLE, TBL_USER_MAPPING_TABLE
@@ -74,7 +77,7 @@ class Table(object):
                 f"insert into {TBL_USER_MAPPING_TABLE} (FIELD, FIELDVALUE, VENDOR, FILE_TYPE) values (:1, :2, :3, :4)", [(raw_data['field'], fieldvalue, raw_data['vendor'], raw_data['file_type'])])
         result = {
             'result': 0,
-            'message': "test autosave_key_value_mapping"
+            'message': ""
         }
         return result
 
@@ -91,5 +94,39 @@ class Table(object):
             'result': 0,
             'message': "",
             'data': data
+        }
+        return result
+
+    @staticmethod
+    def autosave_image_path(uuid):  # 圖片路徑 API
+        if OracleAccess.query(f"select * from {TBL_USER_IMAGE_PATH_TABLE} where UUID = '{uuid}'"):
+            OracleAccess.execute(
+                f"update {TBL_USER_IMAGE_PATH_TABLE} set FRONT_PATH = '', BACK_PATH = '' where UUID = '{uuid}'", args=[])
+        else:
+            OracleAccess.execute(
+                f"insert into {TBL_USER_IMAGE_PATH_TABLE} (UUID, FRONT_PATH, BACK_PATH) values (:1, :2, :3)", [uuid, '', ''])
+
+        root_path = os.environ.get(
+            'nopath', "storage" if os.path.isdir("storage") else "../storage")
+        user_path = os.path.join(root_path, 'photo', uuid)
+        os.makedirs(user_path, exist_ok=True)
+
+        if "front_path" in request.files:
+            front_image = request.files["front_path"]
+            front_path = os.path.join(user_path, secure_filename("front.jpg"))
+            front_image.save(front_path)
+            OracleAccess.execute(
+                f"update {TBL_USER_IMAGE_PATH_TABLE} set FRONT_PATH = '{front_path}' where UUID = '{uuid}'", args=[])
+
+        if "back_path" in request.files:
+            back_image = request.files["back_path"]
+            back_path = os.path.join(user_path, secure_filename("back.jpg"))
+            back_image.save(back_path)
+            OracleAccess.execute(
+                f"update {TBL_USER_IMAGE_PATH_TABLE} set BACK_PATH = '{back_path}' where UUID = '{uuid}'", args=[])
+
+        result = {
+            'result': 0,
+            'message': ""
         }
         return result

@@ -1,7 +1,7 @@
 from flask_restplus import Namespace, Resource, fields, model
 from werkzeug.datastructures import FileStorage
 
-api = Namespace("table", description=u"表格偵測結構")
+api = Namespace("table", description=u"表格偵測結構", ordered=False)
 
 
 base_input_payload = api.model(u'基礎輸入參數定義', {
@@ -94,13 +94,8 @@ table_getKeyValueMapping_input_payload = api.model(u'ERP Key-Value 對照表inpu
     "file_type": fields.String(required=True, example="")
 })
 
-table_getKeyValueMapping_output_tier1_data_payload = api.model(u'ERP Key-Value 對照表output_tier1_data',  {
-    "epr_key1": fields.List(fields.String, required=True, example=["Bo", "Borad", "Boardnum"]),
-    "epr_key2": fields.List(fields.String, required=True, example=["sta", "status", "status1"]),
-})
-
 table_getKeyValueMapping_output_payload = api.clone(u'ERP Key-Value 對照表output', base_input_payload, {
-    'data': fields.Nested(table_getKeyValueMapping_output_tier1_data_payload)
+    'data': fields.Raw()
 })
 
 
